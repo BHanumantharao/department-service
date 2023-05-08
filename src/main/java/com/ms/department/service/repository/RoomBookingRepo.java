@@ -17,20 +17,20 @@ public class RoomBookingRepo {
 
     public static final String HASH_KEY = "RoomBooking";
 
-    public BookingDetails save(BookingDetails bookingDetails) {
+    public synchronized BookingDetails save(BookingDetails bookingDetails) {
         redisTemplate.opsForHash().put(HASH_KEY, bookingDetails.getId(), bookingDetails);
         return bookingDetails;
     }
 
-    public List<BookingDetails> findAll() {
+    public synchronized List<BookingDetails> findAll() {
         return redisTemplate.opsForHash().values(HASH_KEY);
     }
 
-    public BookingDetails findBookDetailsById(int id) {
+    public synchronized BookingDetails findBookDetailsById(int id) {
         return (BookingDetails) redisTemplate.opsForHash().get(HASH_KEY, id);
     }
 
-    public List<BookingDetails> findBookDetailsByGuestName(String guestName) {
+    public synchronized List<BookingDetails> findBookDetailsByGuestName(String guestName) {
         List<BookingDetails> bookingDetailsList = findAll();
         return bookingDetailsList
                 .stream()
@@ -38,7 +38,7 @@ public class RoomBookingRepo {
                 .collect(Collectors.toList());
     }
 
-    public List<BookingDetails> findBookDetailsByBookingDate(LocalDate localDate) {
+    public synchronized List<BookingDetails> findBookDetailsByBookingDate(LocalDate localDate) {
         List<BookingDetails> bookingDetailsList = findAll();
 
         return bookingDetailsList
