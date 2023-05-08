@@ -27,12 +27,12 @@ public class RoomBookingController {
     }
 
     @GetMapping("/findByGuest/{guestName}")
-    public List<BookingDetails> findBookingDetails(@PathVariable String guestName) {
+    public List<BookingDetails> findBookingDetailsByGuestName(@PathVariable String guestName) {
         return roomBookingRepo.findBookDetailsByGuestName(guestName);
     }
 
     @GetMapping("/findByDate")
-    public List<BookingDetails> findBookingDetails(@RequestParam("bookingDate")
+    public List<BookingDetails> findBookingDetailsByBookingDate(@RequestParam("bookingDate")
                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate localDate) {
         return roomBookingRepo.findBookDetailsByBookingDate(localDate);
     }
