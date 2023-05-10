@@ -1,8 +1,8 @@
 package com.ms.department.service.repository;
 
 import com.ms.department.service.dto.BookingDetails;
+import com.ms.department.service.dto.BookingRequest;
 import jdk.nashorn.internal.ir.annotations.Ignore;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -33,9 +34,11 @@ public class RoomBookingRepoMockTest {
 
     @Test
     void save() {
-        BookingDetails bookingDetails = new BookingDetails(1, "Hanu", 101, LocalDate.now());
+        BookingDetails bookingDetails =
+                new BookingDetails(UUID.randomUUID().toString(), "Hanu", 101, LocalDate.now(), "Booked");
+        BookingRequest bookingRequest = new BookingRequest("Hanu", LocalDate.now());
         doNothing().when(redisTemplate).opsForHash().put(any(String.class), any(Object.class), any(Object.class));
-        BookingDetails bookingDetails1 = roomBookingRepo.save(bookingDetails);
+        BookingDetails bookingDetails1 = roomBookingRepo.save(bookingRequest);
         assertNotNull(bookingDetails1);
         assertEquals(bookingDetails.getGuestName(), bookingDetails1.getGuestName());
     }

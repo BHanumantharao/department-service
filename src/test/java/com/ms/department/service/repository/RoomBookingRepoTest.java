@@ -1,6 +1,7 @@
 package com.ms.department.service.repository;
 
 import com.ms.department.service.dto.BookingDetails;
+import com.ms.department.service.dto.BookingRequest;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import redis.clients.jedis.JedisShardInfo;
 import redis.embedded.RedisServer;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -61,8 +63,10 @@ class RoomBookingRepoTest {
 
     @Ignore
     void save() {
-        BookingDetails bookingDetails = new BookingDetails(1, "Hanu", 101, LocalDate.now());
-        BookingDetails bookingDetails1 = roomBookingRepo.save(bookingDetails);
+        BookingDetails bookingDetails =
+                new BookingDetails(UUID.randomUUID().toString(), "Hanu", 101, LocalDate.now(), "Booked");
+        BookingRequest bookingRequest = new BookingRequest("Hanu", LocalDate.now());
+        BookingDetails bookingDetails1 = roomBookingRepo.save(bookingRequest);
         assertNotNull(bookingDetails1);
         assertEquals(bookingDetails.getGuestName(), bookingDetails1.getGuestName());
     }

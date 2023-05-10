@@ -1,6 +1,7 @@
 package com.ms.department.service.controller;
 
 import com.ms.department.service.dto.BookingDetails;
+import com.ms.department.service.dto.BookingRequest;
 import com.ms.department.service.repository.RoomBookingRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,8 +18,8 @@ public class RoomBookingController {
     private RoomBookingRepo roomBookingRepo;
 
     @PostMapping
-    public BookingDetails save(@RequestBody BookingDetails bookingDetails) {
-        return roomBookingRepo.save(bookingDetails);
+    public BookingDetails save(@RequestBody BookingRequest bookingRequest) {
+        return roomBookingRepo.save(bookingRequest);
     }
 
     @GetMapping("/getAllBookingDetails")
