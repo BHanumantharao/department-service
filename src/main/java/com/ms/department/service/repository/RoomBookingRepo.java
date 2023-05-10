@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,25 +32,26 @@ public class RoomBookingRepo {
 
     private BookingDetails setRoomDetails(BookingRequest bookingRequest) {
         BookingDetails bookingDetails = new BookingDetails();
-        try {
-            final int[] roomNumber = {0};
-           roomList.stream()
-                    .forEach(rNo -> {
-                        if(!findBookDetailsByGuestAndBookingDate(bookingRequest.getBookingDate(), rNo)) {
-                            roomNumber[0] = rNo;
-                            return;
-                        }
-                    });
 
+        int roomNumber = 0;
+        for (Integer rmNo : roomList) {
+            boolean status = findBookDetailsByGuestAndBookingDate(bookingRequest.getBookingDate(), rmNo.intValue());
+            System.out.println("Status >>>>>>>>>> " + status);
+            if (!status) {
+                roomNumber = rmNo.intValue();
+                break;
+            }
+        }
+
+        if(roomNumber > 0) {
             bookingDetails.setId(UUID.randomUUID().toString());
-            bookingDetails.setRoomNumber(roomNumber[0]);
+            bookingDetails.setRoomNumber(roomNumber);
             bookingDetails.setGuestName(bookingRequest.getGuestName());
             bookingDetails.setBookingDate(bookingRequest.getBookingDate());
             bookingDetails.setDescription(BOOKING_STATUS);
-        } catch (Exception ex) {
+        } else{
             bookingDetails.setDescription("No rooms available to proceed with given date, please try with other");
         }
-
         return bookingDetails;
     }
 
